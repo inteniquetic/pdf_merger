@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pdf_merger.iml" filepath="$PROJECT_DIR$/.idea/modules/pdf_merger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pdf_merger.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/pdf_merger.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pdf_merger.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pdf_merger.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pdf_merger.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/pdf_merger.unitTest.iml" />
     </modules>
   </component>
 </project>
