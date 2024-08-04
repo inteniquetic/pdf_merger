@@ -9,30 +9,30 @@ import java.io.File
 import java.io.IOException
 
 
-class SizeFormFilePath(getContext : Context, getResult : MethodChannel.Result) {
+class SizeFormFilePath(getContext: Context, getResult: MethodChannel.Result) {
 
     private var context: Context = getContext
     private var result: MethodChannel.Result = getResult
 
 
-    fun size(path: String?)  {
+    fun size(path: String?) {
         var status = ""
 
-        val pdfFromMultipleImage =  GlobalScope.launch(Dispatchers.IO) {
+        val pdfFromMultipleImage = GlobalScope.launch(Dispatchers.IO) {
             try {
                 val file = File(path)
                 file.sizeInMb
-                if (file.sizeInKb > 1024){
-                    if (file.sizeInMb > 1024){
-                        if (file.sizeInGb > 1024){
+                if (file.sizeInKb > 1024) {
+                    if (file.sizeInMb > 1024) {
+                        if (file.sizeInGb > 1024) {
                             status = file.sizeStrWithTb(decimals = 2)
-                        }else{
+                        } else {
                             status = file.sizeStrWithGb(decimals = 2)
                         }
-                    }else{
+                    } else {
                         status = file.sizeStrWithMb(decimals = 2)
                     }
-                }else{
+                } else {
                     status = file.sizeStrWithKb(decimals = 2)
                 }
             } catch (e: IOException) {
@@ -43,7 +43,7 @@ class SizeFormFilePath(getContext : Context, getResult : MethodChannel.Result) {
         }
 
         pdfFromMultipleImage.invokeOnCompletion {
-            if(status == "error")
+            if (status == "error")
                 status = "error"
 
             GlobalScope.launch(Dispatchers.Main) {
@@ -51,7 +51,6 @@ class SizeFormFilePath(getContext : Context, getResult : MethodChannel.Result) {
             }
         }
     }
-
 
 
     val File.size get() = if (!exists()) 0.0 else length().toDouble()

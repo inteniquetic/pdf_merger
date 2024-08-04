@@ -8,13 +8,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class BuildInfo(getContext : Context, getResult : MethodChannel.Result) {
+class BuildInfo(getContext: Context, getResult: MethodChannel.Result) {
 
     private var context: Context = getContext
     private var result: MethodChannel.Result = getResult
-    private val packageInfo: PackageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+    private val packageInfo: PackageInfo =
+        context.packageManager.getPackageInfo(context.packageName, 0)
 
-    fun buildDate()  {
+    fun buildDate() {
         var status = ""
         try {
             val buildDate = Date(packageInfo.lastUpdateTime)
@@ -28,7 +29,7 @@ class BuildInfo(getContext : Context, getResult : MethodChannel.Result) {
     }
 
 
-    fun buildDateWithTime()  {
+    fun buildDateWithTime() {
         var status = ""
         try {
             val buildDate = Date(packageInfo.lastUpdateTime)
@@ -42,7 +43,7 @@ class BuildInfo(getContext : Context, getResult : MethodChannel.Result) {
     }
 
 
-    fun versionName()  {
+    fun versionName() {
         var status = ""
         try {
             result.success(packageInfo.versionName)
@@ -54,7 +55,7 @@ class BuildInfo(getContext : Context, getResult : MethodChannel.Result) {
     }
 
 
-    fun versionCode()  {
+    fun versionCode() {
         var status = ""
         try {
             result.success(packageInfo.versionCode.toString())
@@ -66,7 +67,7 @@ class BuildInfo(getContext : Context, getResult : MethodChannel.Result) {
     }
 
 
-    fun packageName()  {
+    fun packageName() {
         var status = ""
         try {
             result.success(packageInfo.packageName)
@@ -77,7 +78,7 @@ class BuildInfo(getContext : Context, getResult : MethodChannel.Result) {
         }
     }
 
-    fun appName()  {
+    fun appName() {
         var status = ""
         try {
             result.success(packageInfo.applicationInfo.loadLabel(context.packageManager).toString())

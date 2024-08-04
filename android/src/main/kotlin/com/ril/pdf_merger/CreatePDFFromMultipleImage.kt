@@ -16,33 +16,39 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel.Result) {
+class CreatePDFFromMultipleImage(getContext: Context, getResult: MethodChannel.Result) {
 
     private var context: Context = getContext
     private var result: MethodChannel.Result = getResult
 
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    fun create(paths: List<String>?, outputDirPath: String?, needImageCompressor : Boolean?
-                                           , maxWidth : Int?, maxHeight : Int?)  {
+    fun create(
+        paths: List<String>?,
+        outputDirPath: String?,
+        needImageCompressor: Boolean?,
+        maxWidth: Int?,
+        maxHeight: Int?
+    ) {
         var status = ""
 
-        val pdfFromMultipleImage =  GlobalScope.launch(Dispatchers.IO) {
+        val pdfFromMultipleImage = GlobalScope.launch(Dispatchers.IO) {
             try {
                 val file = File(outputDirPath!!)
                 val fileOutputStream = FileOutputStream(file)
                 val pdfDocument = PdfDocument()
-                val i=0;
-                for (item in paths!!){
-                    var bitmap : Bitmap?
+                val i = 0;
+                for (item in paths!!) {
+                    var bitmap: Bitmap?
 
-                    if(needImageCompressor!!)
-                        bitmap =  compressImage(context, item, maxWidth!!, maxHeight!!)
+                    if (needImageCompressor!!)
+                        bitmap = compressImage(context, item, maxWidth!!, maxHeight!!)
                     else
                         bitmap = BitmapFactory.decodeFile(item)
 
 
-                    val pageInfo = PdfDocument.PageInfo.Builder(bitmap!!.width, bitmap.height, i + 1).create()
+                    val pageInfo =
+                        PdfDocument.PageInfo.Builder(bitmap!!.width, bitmap.height, i + 1).create()
                     val page = pdfDocument.startPage(pageInfo)
                     val canvas = page.canvas
                     val paint = Paint()
@@ -62,9 +68,9 @@ class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel
         }
 
         pdfFromMultipleImage.invokeOnCompletion {
-            if(status == "success")
+            if (status == "success")
                 status = outputDirPath!!
-            else if(status == "error")
+            else if (status == "error")
                 status = "error"
 
             GlobalScope.launch(Dispatchers.Main) {
@@ -73,7 +79,12 @@ class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel
         }
     }
 
-    private fun compressImage(context: Context, imagePath: String, maxWidthGet : Int, maxHeightGet : Int): Bitmap? {
+    private fun compressImage(
+        context: Context,
+        imagePath: String,
+        maxWidthGet: Int,
+        maxHeightGet: Int
+    ): Bitmap? {
 
         val maxHeight = maxWidthGet.toFloat()
         val maxWidth = maxHeightGet.toFloat()
@@ -140,7 +151,12 @@ class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel
 
         Canvas(scaledBitmap).also {
             it.setMatrix(scaleMatrix)
-            it.drawBitmap(bmp, middleX - bmp!!.width / 2, middleY - bmp.height / 2, Paint(Paint.FILTER_BITMAP_FLAG))
+            it.drawBitmap(
+                bmp,
+                middleX - bmp!!.width / 2,
+                middleY - bmp.height / 2,
+                Paint(Paint.FILTER_BITMAP_FLAG)
+            )
         }
 
         bmp.run {
@@ -150,20 +166,25 @@ class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel
         val exif: ExifInterface
         try {
             exif = ExifInterface(imagePath)
-            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            val orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
+            )
             val matrix = Matrix()
             when (orientation) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
                 ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
                 ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
             }
-            Bitmap.createBitmap(scaledBitmap!!,
+            Bitmap.createBitmap(
+                scaledBitmap,
                 0,
                 0,
                 scaledBitmap.width,
                 scaledBitmap.height,
                 matrix,
-                true).also { scaledBitmap = it }
+                true
+            ).also { scaledBitmap = it }
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -171,7 +192,11 @@ class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel
     }
 
 
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Int {
         val height = options.outHeight
         val width = options.outWidth
         var inSampleSize = 1
@@ -190,7 +215,6 @@ class CreatePDFFromMultipleImage(getContext : Context, getResult : MethodChannel
 
         return inSampleSize
     }
-
 
 
 }
