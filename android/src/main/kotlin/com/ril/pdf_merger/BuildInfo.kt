@@ -81,7 +81,7 @@ class BuildInfo(getContext: Context, getResult: MethodChannel.Result) {
     fun appName() {
         var status = ""
         try {
-            result.success(packageInfo.applicationInfo.loadLabel(context.packageManager).toString())
+            result.success(packageInfo.applicationInfo?.loadLabel(context.packageManager).toString())
         } catch (e: IOException) {
             e.printStackTrace()
             status = "error"
